@@ -1,0 +1,182 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #eaf1f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-container {
+    background: white;
+    padding: 40px;
+    width: 350px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+h1 {
+    color: #174a72;
+    font-size: 24px;
+}
+
+h3 {
+    color: #444;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background: #176b87;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #104b61;
+}
+
+.dashboard-container {
+    width: 90%;
+    margin: 40px auto;
+    text-align: center;
+}
+
+.dashboard-container h1 {
+    color: #174a72;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    margin-top: 40px;
+}
+
+.dashboard-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.dashboard-card h2 {
+    color: #176b87;
+}
+
+.dashboard-card a {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #176b87;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+@media (max-width: 600px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Medicine page layout */
+body:has(form[action="/medicines"]) {
+    display: block;
+    padding: 30px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+body:has(form[action="/medicines"]) h1,
+body:has(form[action="/medicines"]) h2 {
+    text-align: center;
+}
+
+body:has(form[action="/medicines"]) form {
+    max-width: 600px;
+    margin: 20px auto 40px;
+}
+
+body:has(form[action="/medicines"]) table {
+    width: 100%;
+    max-width: 1000px;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background: white;
+}
+
+body:has(form[action="/medicines"]) th,
+body:has(form[action="/medicines"]) td {
+    padding: 12px;
+    text-align: center;
+}
+
+body:has(form[action="/medicines"]) a {
+    display: block;
+    text-align: center;
+    margin: 15px;
+}
+
+/* Inventory page layout */
+body:has(table th:first-child) {
+    display: block;
+    padding: 30px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+body:has(table th:first-child) h1,
+body:has(table th:first-child) h2 {
+    text-align: center;
+}
+
+body:has(table th:first-child) table {
+    width: 95%;
+    margin: 25px auto;
+    border-collapse: collapse;
+    background: white;
+}
+
+body:has(table th:first-child) th,
+body:has(table th:first-child) td {
+    padding: 12px;
+    text-align: center;
+}
+
+body:has(table th:first-child) a {
+    display: block;
+    text-align: center;
+    margin: 15px;
+}
+/* Low stock alert colours */
+.low-stock {
+    color: red;
+    font-weight: bold;
+    background: #ffe0e0;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.available-stock {
+    color: green;
+    font-weight: bold;
+    background: #e0ffe0;
+    padding: 5px 10px;
+    border-radius: 5px;
+}

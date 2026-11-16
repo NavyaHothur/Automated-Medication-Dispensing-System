@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medicines</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>Medicine Management</h1>
+
+    {% if role == 'Admin' %}
+        <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    {% elif role == 'Pharmacist' %}
+        <a href="{{ url_for('pharmacist_dashboard') }}">Back to Dashboard</a>
+    {% elif role == 'Doctor' %}
+        <a href="{{ url_for('doctor_dashboard') }}">Back to Dashboard</a>
+    {% endif %}
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if role == 'Admin' %}
+
+    <h2>Add New Medicine</h2>
+
+    <form method="POST" action="/medicines">
+        <input type="text" name="medicine_name"
+               placeholder="Medicine Name" required>
+
+        <input type="text" name="category"
+               placeholder="Category" required>
+
+        <input type="text" name="manufacturer"
+               placeholder="Manufacturer" required>
+
+        <input type="number" step="0.01" min="0"
+               name="unit_price" placeholder="Unit Price" required>
+
+        <label>Expiry Date:</label>
+        <input type="date" name="expiry_date" required>
+
+        <button type="submit">Add Medicine</button>
+    </form>
+
+    {% else %}
+
+    <p>You have view-only access to medicines.</p>
+
+    {% endif %}
+
+    <h2>Available Medicines</h2>
+
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Manufacturer</th>
+            <th>Price</th>
+            <th>Expiry Date</th>
+        </tr>
+
+        {% for medicine in medicines %}
+        <tr>
+            <td>{{ medicine.medicine_id }}</td>
+            <td>{{ medicine.medicine_name }}</td>
+            <td>{{ medicine.category }}</td>
+            <td>{{ medicine.manufacturer }}</td>
+            <td>{{ medicine.unit_price }}</td>
+            <td>{{ medicine.expiry_date }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <a href="{{ url_for('logout') }}">Logout</a>
+
+</body>
+</html>

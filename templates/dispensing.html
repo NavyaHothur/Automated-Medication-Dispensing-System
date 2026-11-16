@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medicine Dispensing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>Medicine Dispensing Management</h1>
+
+    <a href="/dashboard">Back to Dashboard</a>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <h2>Dispense Medicine</h2>
+
+    <form method="POST" action="/dispensing">
+
+        <label>Select Pending Prescription:</label>
+
+        <select name="prescription_id" required>
+            <option value="">Select Prescription</option>
+
+            {% for prescription in pending_prescriptions %}
+                <option value="{{ prescription.prescription_id }}">
+                    Prescription {{ prescription.prescription_id }}
+                    - Patient {{ prescription.patient_id }}
+                    - Medicine ID {{ prescription.medicine_id }}
+                    - Quantity {{ prescription.prescribed_quantity }}
+                </option>
+            {% endfor %}
+
+        </select>
+
+        <button type="submit">Dispense Medicine</button>
+
+    </form>
+
+    <h2>Dispensing History</h2>
+
+    <table border="1" cellpadding="10">
+
+        <tr>
+            <th>Dispensing ID</th>
+            <th>Prescription ID</th>
+            <th>Patient ID</th>
+            <th>Medicine</th>
+            <th>Quantity Dispensed</th>
+            <th>Dispensed By</th>
+            <th>Dispensing Date</th>
+            <th>Status</th>
+        </tr>
+
+        {% for record in dispensing %}
+
+        <tr>
+            <td>{{ record.dispensing_id }}</td>
+            <td>{{ record.prescription_id }}</td>
+            <td>{{ record.patient_id }}</td>
+            <td>{{ record.medicine_name }}</td>
+            <td>{{ record.quantity_dispensed }}</td>
+            <td>{{ record.dispensed_by }}</td>
+            <td>{{ record.dispensing_date }}</td>
+            <td>{{ record.status }}</td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</body>
+</html>

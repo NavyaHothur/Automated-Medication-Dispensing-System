@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient Records</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <h1>Patient Records</h1>
+
+    {% if role in ['Admin', 'Pharmacist'] %}
+
+    <h2>Register New Patient</h2>
+
+    <form method="POST" action="/patients">
+
+        <input type="text" name="patient_name"
+               placeholder="Patient Name" required>
+
+        <input type="number" name="age"
+               placeholder="Age" min="1" required>
+
+        <select name="gender" required>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <input type="text" name="phone"
+               placeholder="Phone Number" required>
+
+        {% if role == 'Admin' %}
+        <select name="department_id" required>
+            <option value="">Select Department</option>
+
+            {% for department in departments %}
+            <option value="{{ department.department_id }}">
+                {{ department.department_name }}
+            </option>
+            {% endfor %}
+        </select>
+        {% else %}
+        <p>Department ID: {{ session['department_id'] }}</p>
+        {% endif %}
+
+        <button type="submit">Add Patient</button>
+
+    </form>
+
+    {% else %}
+
+    <p>You can view patient records in your department.</p>
+
+    {% endif %}
+
+    <h2>Existing Patients</h2>
+
+    <table border="1" cellpadding="10"
+           cellspacing="0" align="center">
+
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Phone</th>
+            <th>Department</th>
+        </tr>
+
+        {% for patient in patients %}
+        <tr>
+            <td>{{ patient.patient_id }}</td>
+            <td>{{ patient.patient_name }}</td>
+            <td>{{ patient.age }}</td>
+            <td>{{ patient.gender }}</td>
+            <td>{{ patient.phone }}</td>
+            <td>{{ patient.department_id }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <br>
+
+    {% if role == 'Admin' %}
+        <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    {% elif role == 'Pharmacist' %}
+        <a href="{{ url_for('pharmacist_dashboard') }}">Back to Dashboard</a>
+    {% elif role == 'Doctor' %}
+        <a href="{{ url_for('doctor_dashboard') }}">Back to Dashboard</a>
+    {% endif %}
+
+    <br><br>
+    <a href="{{ url_for('logout') }}">Logout</a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prescription Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            display: block;
+            background: #eef4fa;
+        }
+
+        .prescription-container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 35px auto;
+        }
+
+        .section-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        .section-card h2 {
+            color: #24445d;
+        }
+
+        .prescription-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .prescription-form input,
+        .prescription-form select {
+            width: 100%;
+            padding: 11px;
+            box-sizing: border-box;
+        }
+
+        .prescription-form button {
+            grid-column: 1 / -1;
+            padding: 12px;
+            background: #176b87;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #176b87;
+            color: white;
+        }
+
+        .navigation {
+            margin: 20px 0;
+        }
+
+        .navigation a {
+            color: #176b87;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        @media (max-width: 650px) {
+            .prescription-form {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="prescription-container">
+
+    <h1>Prescription Management</h1>
+
+    <div class="navigation">
+
+        {% if role == 'Admin' %}
+            <a href="{{ url_for('dashboard') }}">Back to Admin Dashboard</a>
+        {% elif role == 'Doctor' %}
+            <a href="{{ url_for('doctor_dashboard') }}">Back to Doctor Dashboard</a>
+        {% else %}
+            <a href="{{ url_for('pharmacist_dashboard') }}">Back to Pharmacist Dashboard</a>
+        {% endif %}
+
+        <a href="{{ url_for('logout') }}">Logout</a>
+
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    {% if role in ['Admin', 'Doctor'] %}
+
+    <div class="section-card">
+
+        <h2>Create Prescription</h2>
+
+        <form action="{{ url_for('prescriptions') }}"
+              method="POST"
+              class="prescription-form">
+
+            <select name="patient_id" required>
+                <option value="">Select Patient</option>
+                {% for patient in patients %}
+                <option value="{{ patient.patient_id }}">
+                    {{ patient.patient_name }}
+                </option>
+                {% endfor %}
+            </select>
+
+            {% if role == 'Admin' %}
+
+            <select name="doctor_id" required>
+                <option value="">Select Doctor</option>
+                {% for doctor in doctors %}
+                <option value="{{ doctor.doctor_id }}">
+                    {{ doctor.doctor_name }}
+                </option>
+                {% endfor %}
+            </select>
+
+            {% else %}
+
+            <input type="text"
+                   value="Dr. {{ session['username'] }} (Logged-in Doctor)"
+                   disabled>
+
+            {% endif %}
+
+            <select name="medicine_id" required>
+                <option value="">Select Medicine</option>
+                {% for medicine in medicines %}
+                <option value="{{ medicine.medicine_id }}">
+                    {{ medicine.medicine_name }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <input type="text"
+                   name="dosage"
+                   placeholder="Dosage (Example: 650mg)"
+                   required>
+
+            <input type="text"
+                   name="frequency"
+                   placeholder="Frequency (Example: Twice daily)"
+                   required>
+
+            <input type="number"
+                   name="duration_days"
+                   min="1"
+                   placeholder="Duration in days"
+                   required>
+
+            <input type="number"
+                   name="prescribed_quantity"
+                   min="1"
+                   placeholder="Prescribed quantity"
+                   required>
+
+            <button type="submit">Create Prescription</button>
+
+        </form>
+
+    </div>
+
+    {% else %}
+
+    <div class="section-card">
+        <h3>View Only</h3>
+        <p>Pharmacists can view prescriptions but cannot create or edit them.</p>
+    </div>
+
+    {% endif %}
+
+    <div class="section-card">
+
+        <h2>Prescription Records</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Prescription ID</th>
+                        <th>Patient ID</th>
+                        <th>Doctor ID</th>
+                        <th>Medicine ID</th>
+                        <th>Dosage</th>
+                        <th>Frequency</th>
+                        <th>Duration</th>
+                        <th>Quantity</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for prescription in prescriptions %}
+
+                    <tr>
+                        <td>{{ prescription.prescription_id }}</td>
+                        <td>{{ prescription.patient_id }}</td>
+                        <td>{{ prescription.doctor_id }}</td>
+                        <td>{{ prescription.medicine_id }}</td>
+                        <td>{{ prescription.dosage }}</td>
+                        <td>{{ prescription.frequency }}</td>
+                        <td>{{ prescription.duration_days }} days</td>
+                        <td>{{ prescription.prescribed_quantity }}</td>
+                        <td>{{ prescription.prescription_date }}</td>
+                        <td>{{ prescription.status }}</td>
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+                        <td colspan="10">No prescriptions available.</td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
